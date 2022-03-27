@@ -12,6 +12,10 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text('Home Page'),
       ),
+      // Hanya berisi container dengan posisi ditengah, tinggi 80 dan panjang 150.
+      // Kemudian didalamnya terdapat text WekcomePage berupa flatButton berwarna biru dengan text berwarna putih.
+      // Ketika button ditekan maka akan kembali ke context atau halaman awal.
+      // Fungsi navigator seperti pada javascript .pop yang artinya menhapus data terkahir dari sebuah array
       body: Center(
         child: Container(
           height: 80,
