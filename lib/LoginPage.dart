@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   FirebaseAuth.instance
                       .signInWithEmailAndPassword(
-                          email: 'afifx@gmail.com', password: 'Bismillahz')
+                          email: 'afif@gmail.com', password: 'Bismillah')
                       .then((value) => {
                             // ignore: avoid_print, unnecessary_brace_in_string_interps
                             print(value.toString()),
