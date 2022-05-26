@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:login_app/LoginPage.dart';
 
 class Data {
   final int userId;
@@ -37,6 +39,35 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Future<List<Data>> futureData;
+
+  int _selectedNavbar = 0;
+
+  void _changeSelectedNavBar(int index) {
+    setState(() {
+      _selectedNavbar = index;
+      print(_selectedNavbar);
+      if (_selectedNavbar == 1) {
+        FirebaseAuth.instance
+            .signOut()
+            .then((value) => {
+                  print('Success logout'),
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text("Success Logout"),
+                  )),
+                  Timer(
+                      const Duration(seconds: 2),
+                      () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const LoginPage()))
+                          }),
+                })
+            .catchError((onError, stackError) =>
+                {print('Error logout ${onError.toString()}')});
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -94,6 +125,23 @@ class _HomePageState extends State<HomePage> {
               return CircularProgressIndicator();
             },
           ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.logout),
+              label: 'Logout',
+            ),
+          ],
+          currentIndex: _selectedNavbar,
+          selectedItemColor: Colors.green,
+          unselectedItemColor: Colors.grey,
+          showUnselectedLabels: true,
+          onTap: _changeSelectedNavBar,
         ),
       ),
     );

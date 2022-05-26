@@ -110,6 +110,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             Timer(
                                 const Duration(seconds: 2),
                                 () => {
+                                      _emailController.clear(),
+                                      _passwordController.clear(),
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(

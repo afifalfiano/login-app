@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -119,8 +121,16 @@ class _LoginPageState extends State<LoginPage> {
                                 .showSnackBar(const SnackBar(
                               content: Text("Success Login"),
                             )),
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (_) => HomePage()))
+                            Timer(
+                                const Duration(seconds: 2),
+                                () => {
+                                      _emailController.clear(),
+                                      _passwordController.clear(),
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (_) => HomePage()))
+                                    }),
                           })
                       // ignore: invalid_return_type_for_catch_error
                       .catchError((onError, stackError) => {
