@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:login_app/HomePage.dart';
 import 'package:login_app/RegisterPage.dart';
 
+final TextEditingController _emailController = TextEditingController();
+final TextEditingController _passwordController = TextEditingController();
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -44,7 +47,14 @@ class _LoginPageState extends State<LoginPage> {
               // Kemudian row selanjutnya menggunakan jarak horizontal 15
               padding: EdgeInsets.symmetric(horizontal: 15),
               //  Memiliki child komponen berupa TextField yang memiliki style outline input border dengan label Email dan hint enter valid email id as abc@gmail.com
-              child: TextField(
+              child: TextFormField(
+                controller: _emailController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Email',
@@ -56,12 +66,19 @@ class _LoginPageState extends State<LoginPage> {
               // Komponen input bertipe password dengan menggunakan obsecureText. Kemudian untuk label password dan hint enter secure pasword.
               padding: const EdgeInsets.only(
                   left: 15.0, right: 15.0, top: 15, bottom: 0),
-              child: TextField(
+              child: TextFormField(
                 obscureText: true,
+                controller: _passwordController,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Password',
                     hintText: 'Enter secure password'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
               ),
             ),
             // Kemudian row selanjutnya terdapat komponen flat button dengan jarak atas dan bawah 30
@@ -90,13 +107,18 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   FirebaseAuth.instance
                       .signInWithEmailAndPassword(
-                          email: 'afif@gmail.com', password: 'Bismillah')
+                          email: _emailController.text,
+                          password: _passwordController.text)
                       .then((value) => {
                             // ignore: avoid_print, unnecessary_brace_in_string_interps
                             print(value.toString()),
                             setState(() {
                               _isLoggedIn = true;
                             }),
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text("Success Login"),
+                            )),
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (_) => HomePage()))
                           })
@@ -105,6 +127,10 @@ class _LoginPageState extends State<LoginPage> {
                             setState(() {
                               _isLoggedIn = false;
                             }),
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text("Error Login"),
+                            )),
                             // ignore: avoid_print
                             print('Error login ${onError.toString()}')
                           });

@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:login_app/HomePage.dart';
 import 'package:login_app/LoginPage.dart';
+
+final TextEditingController _emailController = TextEditingController();
+final TextEditingController _passwordController = TextEditingController();
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -42,11 +47,18 @@ class _RegisterPageState extends State<RegisterPage> {
               // Kemudian row selanjutnya menggunakan jarak horizontal 15
               padding: EdgeInsets.symmetric(horizontal: 15),
               //  Memiliki child komponen berupa TextField yang memiliki style outline input border dengan label Email dan hint enter valid email id as abc@gmail.com
-              child: TextField(
+              child: TextFormField(
+                controller: _emailController,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Email',
                     hintText: 'Enter valid email id as abc@gmail.com'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
               ),
             ),
             Padding(
@@ -54,12 +66,19 @@ class _RegisterPageState extends State<RegisterPage> {
               // Komponen input bertipe password dengan menggunakan obsecureText. Kemudian untuk label password dan hint enter secure pasword.
               padding: const EdgeInsets.only(
                   left: 15.0, right: 15.0, top: 15, bottom: 15),
-              child: TextField(
+              child: TextFormField(
+                controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Password',
                     hintText: 'Enter secure password'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
               ),
             ),
             // Kemudian row selanjutnya terdapat komponen flat button dengan jarak atas dan bawah 30
@@ -79,21 +98,37 @@ class _RegisterPageState extends State<RegisterPage> {
                 onPressed: () {
                   FirebaseAuth.instance
                       .createUserWithEmailAndPassword(
-                          email: 'afif@gmail.com', password: 'Bismillah')
+                          email: _emailController.text,
+                          password: _passwordController.text)
                       .then((value) => {
                             // ignore: avoid_print, unnecessary_brace_in_string_interps
                             print(value.toString()),
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (_) => HomePage()))
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text("Success Register"),
+                            )),
+                            Timer(
+                                const Duration(seconds: 2),
+                                () => {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (_) =>
+                                                  const LoginPage()))
+                                    }),
                           })
                       // ignore: invalid_return_type_for_catch_error
                       .catchError((onError, stackError) => {
                             // ignore: avoid_print
-                            print('Error login ${onError.toString()}')
+                            print('Error login ${onError.toString()}'),
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text("Error Register"),
+                            )),
                           });
                 },
                 child: Text(
-                  'Login',
+                  'Register',
                   style: TextStyle(color: Colors.white, fontSize: 25),
                 ),
               ),
