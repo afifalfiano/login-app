@@ -61,13 +61,31 @@ class _HomePageState extends State<HomePage> {
                 return ListView.builder(
                     itemCount: data?.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        height: 75,
-                        color: Colors.white,
-                        child: Center(
-                          child: Text(data![index].title),
-                        ),
+                      return Row(
+                        children: [
+                          Expanded(
+                            flex: 4,
+                            child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 20, left: 20, bottom: 10, right: 10),
+                                child: Text(data![index].title)),
+                          ),
+                          Expanded(
+                            flex: 4,
+                            child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 20, left: 20, bottom: 10, right: 10),
+                                child: Text(data![index].title)),
+                          )
+                        ],
                       );
+                      // return Container(
+                      //   height: 75,
+                      //   color: Colors.white,
+                      //   child: Center(
+                      //     child: Text(data![index].title),
+                      //   ),
+                      // );
                     });
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
