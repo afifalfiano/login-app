@@ -12,6 +12,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  var _isLoggedIn = true;
+
   @override
   Widget build(BuildContext context) {
     // Root apps
@@ -88,24 +90,37 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   FirebaseAuth.instance
                       .signInWithEmailAndPassword(
-                          email: 'afif@gmail.com', password: 'Bismillah')
+                          email: 'afifx@gmail.com', password: 'Bismillahz')
                       .then((value) => {
                             // ignore: avoid_print, unnecessary_brace_in_string_interps
                             print(value.toString()),
+                            setState(() {
+                              _isLoggedIn = true;
+                            }),
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (_) => HomePage()))
                           })
                       // ignore: invalid_return_type_for_catch_error
                       .catchError((onError, stackError) => {
+                            setState(() {
+                              _isLoggedIn = false;
+                            }),
                             // ignore: avoid_print
                             print('Error login ${onError.toString()}')
                           });
                 },
-                child: Text(
+                child: const Text(
                   'Login',
                   style: TextStyle(color: Colors.white, fontSize: 25),
                 ),
               ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(10),
+              child: _isLoggedIn
+                  ? Text('Please Login', style: TextStyle(color: Colors.blue))
+                  : Text('Error Login! Check your email and password',
+                      style: TextStyle(color: Colors.red)),
             ),
             // Terdapat sized box dengan tinggi 130 yang berisi text new User ? create account.
             SizedBox(
