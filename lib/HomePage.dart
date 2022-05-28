@@ -6,24 +6,33 @@ import 'package:http/http.dart' as http;
 import 'package:login_app/LoginPage.dart';
 
 class Data {
-  final int userId;
+  final int albumId;
   final int id;
   final String title;
+  final String url;
+  final String thumbnailUrl;
 
-  Data({required this.userId, required this.id, required this.title});
+  Data(
+      {required this.albumId,
+      required this.id,
+      required this.title,
+      required this.url,
+      required this.thumbnailUrl});
 
   factory Data.fromJson(Map<String, dynamic> json) {
     return Data(
-      userId: json['userId'],
+      albumId: json['albumId'],
       id: json['id'],
       title: json['title'],
+      url: json['url'],
+      thumbnailUrl: json['thumbnailUrl'],
     );
   }
 }
 
 Future<List<Data>> fetchData() async {
   final response =
-      await http.get(Uri.parse('https://jsonplaceholder.typicode.com/albums'));
+      await http.get(Uri.parse('https://jsonplaceholder.typicode.com/photos'));
   if (response.statusCode == 200) {
     List jsonResponse = json.decode(response.body);
     return jsonResponse.map((data) => Data.fromJson(data)).toList();
@@ -98,14 +107,15 @@ class _HomePageState extends State<HomePage> {
                             flex: 4,
                             child: Padding(
                                 padding: const EdgeInsets.only(
-                                    top: 20, left: 20, bottom: 10, right: 10),
-                                child: Text(data![index].title)),
+                                    top: 5, left: 5, bottom: 5, right: 5),
+                                child:
+                                    Image.network(data![index].thumbnailUrl)),
                           ),
                           Expanded(
                             flex: 4,
                             child: Padding(
                                 padding: const EdgeInsets.only(
-                                    top: 20, left: 20, bottom: 10, right: 10),
+                                    top: 5, left: 5, bottom: 5, right: 5),
                                 child: Text(data![index].title)),
                           )
                         ],
