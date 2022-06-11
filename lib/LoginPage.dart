@@ -62,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Email',
-                    hintText: 'Enter valid email id as abc@gmail.com'),
+                    hintText: 'ex: username@mail'),
               ),
             ),
             Padding(
@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Password',
-                    hintText: 'Enter secure password'),
+                    hintText: '************'),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Please enter some text';
@@ -90,9 +90,7 @@ class _LoginPageState extends State<LoginPage> {
             // Flat button tersebut berisi text Forgot Password dengan style warna biru dan font sebesar 15
             FlatButton(
               padding: EdgeInsets.only(top: 30.0, bottom: 30.0),
-              onPressed: () {
-                //TODO FORGOT PASSWORD SCREEN GOES HERE
-              },
+              onPressed: () {},
               child: Text(
                 'Forgot Password',
                 style: TextStyle(color: Colors.blue, fontSize: 15),

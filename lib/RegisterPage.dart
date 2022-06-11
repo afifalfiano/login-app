@@ -53,7 +53,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Email',
-                    hintText: 'Enter valid email id as abc@gmail.com'),
+                    hintText: 'ex: username@mail.com'),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Please enter some text';
@@ -73,7 +73,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Password',
-                    hintText: 'Enter secure password'),
+                    hintText: '************'),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Please enter some text';
