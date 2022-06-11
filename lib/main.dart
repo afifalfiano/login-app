@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:login_app/LoginPage.dart';
 
 void main() {
+  // Menggunakan binding flutter widget untuk inisialisasi firebase
   WidgetsFlutterBinding.ensureInitialized();
+  // Inisilaisasi firebase berupa key dan prpoerti lainnya.
   Firebase.initializeApp(
     options: const FirebaseOptions(
       apiKey: "AIzaSyDAGHxVcblrmYazxWojSEsOAuBE3NWkzhU",
@@ -24,6 +26,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Afif Alfiano',
       theme: ThemeData(primaryColor: Colors.blue),
+      // Pertama kali masuk ke halaman login
       home: const LoginPage(),
     );
   }

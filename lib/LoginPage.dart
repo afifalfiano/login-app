@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:login_app/HomePage.dart';
 import 'package:login_app/RegisterPage.dart';
 
+// Controller yang digunakan untuk menyimpan value text
 final TextEditingController _emailController = TextEditingController();
 final TextEditingController _passwordController = TextEditingController();
 
@@ -17,6 +18,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  // Digunakan untuk mengecek kondisi apakah user telah login atau belum.
   var _isLoggedIn = true;
 
   @override
@@ -107,6 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                   color: Colors.blue, borderRadius: BorderRadius.circular(20)),
               child: FlatButton(
                 onPressed: () {
+                  // Ketika button diklik maka akan proses login menggunakan email dan password
                   FirebaseAuth.instance
                       .signInWithEmailAndPassword(
                           email: _emailController.text,
@@ -114,13 +117,18 @@ class _LoginPageState extends State<LoginPage> {
                       .then((value) => {
                             // ignore: avoid_print, unnecessary_brace_in_string_interps
                             print(value.toString()),
+                            // Ketika berhasil login maka saya set state isLoggedIn menjadi true.
                             setState(() {
                               _isLoggedIn = true;
                             }),
+
+                            // Kemudian keluar notifikasi toast berupa success login yang muncul dari bawah layar.
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(const SnackBar(
                               content: Text("Success Login"),
                             )),
+                            // Setelah itu saya gunakan timer selama 2 detik untuk menunggu kemudian saya clear controller email dan password.
+                            // Setelah itu akan masuk ke halaman homepage.
                             Timer(
                                 const Duration(seconds: 2),
                                 () => {
@@ -134,6 +142,8 @@ class _LoginPageState extends State<LoginPage> {
                           })
                       // ignore: invalid_return_type_for_catch_error
                       .catchError((onError, stackError) => {
+                            // Tapi ketika gagal login maka akan keluar pesan error Error Login dan untuk mengecek log terdapat pada terminal
+                            // Selain itu saya juga set state untuk isLoggedIn menjadi false.
                             setState(() {
                               _isLoggedIn = false;
                             }),
@@ -151,6 +161,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
+            // Elemen ini digunakan untuk menampilkan pesan error dan berhasil ketika login
             Container(
               padding: const EdgeInsets.all(10),
               child: _isLoggedIn
@@ -162,9 +173,11 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: 130,
             ),
+
             Text(
               'New User? ',
             ),
+            // Teks ini digunakan untuk mendaftar user dengan cara berpindah ke halaman register.
             TextButton(
                 onPressed: (() => {
                       Navigator.push(context,

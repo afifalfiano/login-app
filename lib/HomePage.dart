@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:login_app/LoginPage.dart';
 
+// Class data yang saya gunakan untuk mengambil data dari open api jsonplaceholder untuk opsi photos
 class Data {
   final int albumId;
   final int id;
@@ -19,6 +20,7 @@ class Data {
       required this.url,
       required this.thumbnailUrl});
 
+// Menggunakan factory untuk translate data dari json menjadi sebuah data .
   factory Data.fromJson(Map<String, dynamic> json) {
     return Data(
       albumId: json['albumId'],
@@ -30,6 +32,10 @@ class Data {
   }
 }
 
+// Menggunakan future untuk proses async ferchData
+// Menggunakan module http kemudian untuk urlnya perlu kita parse menggunakan Uri
+// Ketika statusCode 200 maka akan melakuakn decode json dari response.body
+// Setelah itu akan mengembalikan nilai nya ke dalam Data berupa list.
 Future<List<Data>> fetchData() async {
   final response =
       await http.get(Uri.parse('https://jsonplaceholder.typicode.com/photos'));
@@ -47,15 +53,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // Menggunakan future fetch data tadi.
   late Future<List<Data>> futureData;
 
+// Digunakan untuk menampilkan menu bar mana yang sedang aktif.
   int _selectedNavbar = 0;
 
+// Fungsi yang digunakan untuk memilih menu mana yang aktif.
   void _changeSelectedNavBar(int index) {
     setState(() {
       _selectedNavbar = index;
       print(_selectedNavbar);
       if (_selectedNavbar == 1) {
+        // Ketika selected navbar 1 atau icon logout maka akan menjalankan fungsi signout dari firebase dan otomatis user
+        // akan kembali ke halaman login jika tidak terjadi error
         FirebaseAuth.instance
             .signOut()
             .then((value) => {
@@ -80,6 +91,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    // Saya init state untuk variabel futureData berisi fungsi fetchData yang kita panggil secara async tadi.
     super.initState();
     futureData = fetchData();
   }
@@ -92,17 +104,27 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: Text('Home'),
         ),
+        // Menggunakan element center yang berisi future builder untuk menampilkan data hasil request futureData
         body: Center(
           child: FutureBuilder<List<Data>>(
             future: futureData,
             builder: (context, snapshot) {
+              // Kemudian untuk builder defaultnya terdapat 2 parameter yaitu context dan snapshot.
+              // Ketika snapshot hasData bernilai true atau ada datanya.
+              // Maka akan membuat  sebuah List dengan typing class Data dari variabel snapshot.data
               if (snapshot.hasData) {
                 List<Data>? data = snapshot.data;
+                // Kemudian membuat sebuah viewlist dengan properti itemCount berisi data.length
                 return ListView.builder(
                     itemCount: data?.length,
+                    // Itembuilder yang dibuat menggunakan list view saya buat sebuah Row dengan children expanded,
+                    // Jadi saya menggunakan konsep flex, bukan grid lagi.
                     itemBuilder: (BuildContext context, int index) {
                       return Row(
                         children: [
+                          // Jadi dalam satu row terdapat 2 flex dengan masih masing flex memiliki lebar sebanyak 4 satuan flex.
+                          // Flex pertam berisi image atau gambar dengan jarak padding 5 yang saya ambil dari properti thumbnailUrl
+                          // Flex kedua berisi tulisan dari teks gambar yang ada yang saya ambil dari properti title
                           Expanded(
                             flex: 4,
                             child: Padding(
@@ -120,22 +142,18 @@ class _HomePageState extends State<HomePage> {
                           )
                         ],
                       );
-                      // return Container(
-                      //   height: 75,
-                      //   color: Colors.white,
-                      //   child: Center(
-                      //     child: Text(data![index].title),
-                      //   ),
-                      // );
                     });
               } else if (snapshot.hasError) {
+                // ketika snapshot has error bernilai true maka akan muncul pesan error
                 return Text("${snapshot.error}");
               }
               // By default show a loading spinner.
-              return CircularProgressIndicator();
+              // Digunakan untuk memubat animasi loading indicator
+              return const CircularProgressIndicator();
             },
           ),
         ),
+        // Pada menu bar saya tambahkan untuk icon home dan logout.
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
@@ -147,6 +165,10 @@ class _HomePageState extends State<HomePage> {
               label: 'Logout',
             ),
           ],
+          // Current index dari state selectedNavbar
+          // Warna yang aktif berwarna hijau
+          // Warna yang tidak aktif berwarna abu abu
+          // Ketika ontap maka akan menjalankan fungsi changeselected navbar diatas tadi.
           currentIndex: _selectedNavbar,
           selectedItemColor: Colors.green,
           unselectedItemColor: Colors.grey,

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:login_app/HomePage.dart';
 import 'package:login_app/LoginPage.dart';
 
+// controller teks berupa email dan password.
 final TextEditingController _emailController = TextEditingController();
 final TextEditingController _passwordController = TextEditingController();
 
@@ -96,17 +97,20 @@ class _RegisterPageState extends State<RegisterPage> {
                   color: Colors.blue, borderRadius: BorderRadius.circular(20)),
               child: FlatButton(
                 onPressed: () {
+                  // Ketika nilai email dan password sudah terisi maka dan user klik button maka akan mendjalankan fungsi untuk create user dengan email dan password di firebase.
                   FirebaseAuth.instance
                       .createUserWithEmailAndPassword(
                           email: _emailController.text,
                           password: _passwordController.text)
                       .then((value) => {
+                            // Ketika berhasil maka akan menampilkan toast snackbar success register
                             // ignore: avoid_print, unnecessary_brace_in_string_interps
                             print(value.toString()),
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(const SnackBar(
                               content: Text("Success Register"),
                             )),
+                            // Setelah berhasil maka akan menunggu selama 2 detik sebelum masuk ke halaman login.
                             Timer(
                                 const Duration(seconds: 2),
                                 () => {
@@ -122,6 +126,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       // ignore: invalid_return_type_for_catch_error
                       .catchError((onError, stackError) => {
                             // ignore: avoid_print
+                            // Tetapi ketika error maka akan menampilkan toast error register dan log akan tampil di terminal
                             print('Error login ${onError.toString()}'),
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(const SnackBar(
@@ -139,6 +144,7 @@ class _RegisterPageState extends State<RegisterPage> {
             SizedBox(
               height: 130,
             ),
+            // Ketika sudah memiliki akun bisa klik tulisan have account dan otomatis akan pindah ke halaman login.
             Text(
               'Have account? ',
             ),
